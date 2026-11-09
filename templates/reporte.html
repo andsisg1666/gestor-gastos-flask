@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Gastos</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            padding: 30px;
+        }
+
+        .contenedor {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #2563eb;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        button, .volver {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .acciones {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>Reporte de Gastos</h1>
+    <p>Resumen de los gastos registrados</p>
+
+    <table>
+        <tr>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Monto (S/)</th>
+        </tr>
+
+        {% for gasto in gastos %}
+        <tr>
+            <td>{{ gasto[0] }}</td>
+            <td>{{ gasto[1] }}</td>
+            <td>S/ {{ "%.2f"|format(gasto[2]) }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">
+                No hay gastos registrados.
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <p class="total">
+        Total gastado: S/ {{ "%.2f"|format(total) }}
+    </p>
+
+    <div class="acciones">
+        <button onclick="window.print()">
+            Imprimir o guardar en PDF
+        </button>
+
+        <a class="volver" href="/panel">
+            Volver al panel
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

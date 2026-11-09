@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de Gastos</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            margin: 0;
+        }
+
+        header {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .contenedor {
+            background: white;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #0002;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Sistema de Registro de Gastos</h1>
+    <p>Bienvenido, administrador</p>
+</header>
+
+<div class="contenedor">
+
+    <h2>Registrar nuevo gasto</h2>
+
+    
+<form method="POST" action="{{ url_for('panel') }}">
+
+        <label>Fecha</label>
+        <input type="date" name="fecha" required>
+        <label>Descripción</label>
+        <input type="text" name="descripcion"
+               placeholder="Ejemplo: Compra de útiles"
+               required>
+
+        <label>Monto (S/)</label>
+        <input type="number" name="monto"
+               step="0.01" min="0.01"
+               placeholder="Ejemplo: 25.50"
+               required>
+
+        <button type="submit">
+    Guardar gasto
+</button>
+    </form>
+
+{% if guardado %}
+    <p style="color: green;">
+        Gasto guardado correctamente.
+    </p>
+{% endif %}
+
+{% if error %}
+    <p style="color: red;">
+        {{ error }}
+    </p>
+{% endif %}
+
+
+<h2>Historial de gastos</h2>
+
+{% if gastos %}
+
+
+<table style="width:100%; border-collapse:collapse;">
+
+    <tr style="background:#2563eb; color:white;">
+        <th style="padding:10px;">Fecha</th>
+        <th style="padding:10px;">Descripción</th>
+        <th style="padding:10px;">Monto (S/)</th>
+        <th style="padding:10px;">Acción</th>
+    </tr>
+
+    {% for gasto in gastos %}
+    <tr>
+        <td style="padding:10px;">
+            {{ gasto[1] }}
+        </td>
+
+        <td style="padding:10px;">
+            {{ gasto[2] }}
+        </td>
+
+        <td style="padding:10px;">
+            S/ {{ "%.2f"|format(gasto[3]) }}
+        </td>
+
+        <td style="padding:10px;">
+            <form method="POST"
+                  action="{{ url_for('eliminar_gasto', gasto_id=gasto[0]) }}"
+                  onsubmit="return confirm('¿Deseas eliminar este gasto?');">
+
+                <button type="submit"
+                        style="background:#dc2626;
+                               color:white;
+                               padding:8px;
+                               border:none;
+                               border-radius:5px;
+                               cursor:pointer;
+                               margin-top:0;">
+                    Eliminar
+                </button>
+
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+ 
+<h3>Total gastado: S/ {{ "%.2f"|format(total) }}</h3>
+
+{% else %}
+
+<p>Todavía no hay gastos registrados.</p>
+
+{% endif %}
+
+<a href="{{ url_for('reporte') }}"
+   style="display:block;
+          background:#16a34a;
+          color:white;
+          padding:14px;
+          border-radius:6px;
+          text-align:center;
+          text-decoration:none;
+          margin-top:20px;">
+    Ver reporte de gastos
+</a>
+
+    <a href="/salir">Cerrar sesión</a>
+
+</div>
+
+</body>
+</html>
